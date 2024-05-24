@@ -1,0 +1,39 @@
+-- Function to find the nearest player
+local function findNearestPlayer()
+    local closestPlayer = nil
+    local shortestDistance = math.huge
+    
+    local myPosition = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+    
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if player ~= game.Players.LocalPlayer then
+            local playerCharacter = player.Character
+            if playerCharacter and playerCharacter:FindFirstChild("HumanoidRootPart") then
+                local playerPosition = playerCharacter.HumanoidRootPart.Position
+                local distance = (playerPosition - myPosition).magnitude
+                if distance < shortestDistance then
+                    closestPlayer = player
+                    shortestDistance = distance
+                end
+            end
+        end
+    end
+    
+    return closestPlayer
+end
+
+-- Function to lock camera onto nearest player
+local function lockCamera()
+    local nearestPlayer = findNearestPlayer()
+    if nearestPlayer then
+        local playerCharacter = nearestPlayer.Character
+        if playerCharacter and playerCharacter:FindFirstChild("HumanoidRootPart") then
+            game.Workspace.CurrentCamera.CFrame = CFrame.new(game.Workspace.CurrentCamera.CFrame.Position, playerCharacter.HumanoidRootPart.Position)
+        end
+    end
+end
+
+-- Loop to continuously update camera
+while wait(0.00001) do
+    lockCamera()
+end
