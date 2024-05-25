@@ -1,0 +1,97 @@
+-- Create GUI elements
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "TeleportGUI"
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+local Frame = Instance.new("Frame")
+Frame.Size = UDim2.new(0, 200, 0, 150)
+Frame.Position = UDim2.new(1, -220, 0, 20)
+Frame.BackgroundColor3 = Color3.fromRGB(169, 169, 169) -- Grey
+Frame.BorderSizePixel = 0
+Frame.Parent = ScreenGui
+
+local UsernameTextBox = Instance.new("TextBox")
+UsernameTextBox.PlaceholderText = "Player Username"
+UsernameTextBox.Size = UDim2.new(0, 180, 0, 30)
+UsernameTextBox.Position = UDim2.new(0.05, 0, 0.1, 0)
+UsernameTextBox.Parent = Frame
+
+local SpeedTextBox = Instance.new("TextBox")
+SpeedTextBox.PlaceholderText = "Teleport Speed"
+SpeedTextBox.Size = UDim2.new(0, 180, 0, 30)
+SpeedTextBox.Position = UDim2.new(0.05, 0, 0.4, 0)
+SpeedTextBox.Parent = Frame
+
+local RadiusTextBox = Instance.new("TextBox")
+RadiusTextBox.PlaceholderText = "Teleport Radius"
+RadiusTextBox.Size = UDim2.new(0, 180, 0, 30)
+RadiusTextBox.Position = UDim2.new(0.05, 0, 0.7, 0)
+RadiusTextBox.Parent = Frame
+
+local TrollButton = Instance.new("TextButton")
+TrollButton.Text = "Troll Off"
+TrollButton.Size = UDim2.new(0, 100, 0, 25)
+TrollButton.Position = UDim2.new(0.05, 0, 0.85, 0)
+TrollButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0) -- Green
+TrollButton.Parent = Frame
+
+local CloseButton = Instance.new("TextButton")
+CloseButton.Text = "Close Menu"
+CloseButton.Size = UDim2.new(0, 100, 0, 25)
+CloseButton.Position = UDim2.new(0.05, 0, 0.92, 0) -- Adjusted position
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Red
+CloseButton.Parent = Frame
+
+-- Define default values
+local defaultSpeed = 0.0001
+local defaultRadius = 10
+
+-- Handle Troll button click
+local trollEnabled = false
+TrollButton.MouseButton1Click:Connect(function()
+    trollEnabled = not trollEnabled
+    if trollEnabled then
+        TrollButton.Text = "Troll On"
+    else
+        TrollButton.Text = "Troll Off"
+    end
+end)
+
+-- Handle Close button click
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy() -- Destroy the entire GUI
+    
+    local ClosePopup = Instance.new("ScreenGui")
+    ClosePopup.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    
+    local PopupFrame = Instance.new("Frame")
+    PopupFrame.Size = UDim2.new(0, 200, 0, 100)
+    PopupFrame.Position = UDim2.new(0.5, -100, 0.5, -50)
+    PopupFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    PopupFrame.BorderSizePixel = 0
+    PopupFrame.Parent = ClosePopup
+    
+    local PopupText = Instance.new("TextLabel")
+    PopupText.Text = "Press LeftShift to reopen menu"
+    PopupText.Size = UDim2.new(1, 0, 1, 0)
+    PopupText.FontSize = Enum.FontSize.Size18 -- Adjusted text size
+    PopupText.TextColor3 = Color3.fromRGB(0, 0, 0)
+    PopupText.BackgroundTransparency = 1
+    PopupText.Parent = PopupFrame
+end)
+
+-- Main loop for trolling
+while true do
+    wait(tonumber(SpeedTextBox.Text) or defaultSpeed)
+    if trollEnabled then
+        local targetPlayer = game.Players:FindFirstChild(UsernameTextBox.Text)
+        if targetPlayer then
+            local targetPosition = targetPlayer.Character and targetPlayer.Character.PrimaryPart and targetPlayer.Character.PrimaryPart.Position
+            if targetPosition then
+                local radius = tonumber(RadiusTextBox.Text) or defaultRadius
+                local randomOffset = Vector3.new(math.random(-radius, radius), 0, math.random(-radius, radius))
+                game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(targetPosition + randomOffset))
+            end
+        end
+    end
+end
