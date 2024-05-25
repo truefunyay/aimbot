@@ -1,0 +1,93 @@
+local player = game.Players.LocalPlayer
+local gui = Instance.new("ScreenGui")
+gui.IgnoreGuiInset = true
+gui.Parent = player.PlayerGui
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 300, 0, 150)
+frame.Position = UDim2.new(1, -300, 0, 0)
+frame.BackgroundColor3 = Color3.new(0, 0, 0)
+frame.Parent = gui
+
+local closeButton = Instance.new("TextButton")
+closeButton.Size = UDim2.new(0, 20, 0, 20)
+closeButton.Position = UDim2.new(1, -20, 0, 0)
+closeButton.BackgroundColor3 = Color3.new(1, 0, 0)
+closeButton.TextColor3 = Color3.new(1, 1, 1)
+closeButton.Text = "X"
+closeButton.Font = Enum.Font.SourceSansBold
+closeButton.Parent = frame
+
+local aimbotButton = Instance.new("TextButton")
+aimbotButton.Size = UDim2.new(0, 100, 0, 30)
+aimbotButton.Position = UDim2.new(0.05, 0, 0.2, 0)
+aimbotButton.BackgroundColor3 = Color3.new(1, 1, 1)
+aimbotButton.Text = "Aimbot"
+aimbotButton.Parent = frame
+
+local aimbotLabel = Instance.new("TextLabel")
+aimbotLabel.Size = UDim2.new(0, 30, 0, 30)
+aimbotLabel.Position = UDim2.new(0.75, 0, 0.18, 0) -- Adjusted position
+aimbotLabel.AnchorPoint = Vector2.new(1, 0) -- Anchored to the right
+aimbotLabel.BackgroundColor3 = Color3.new(1, 1, 1)
+aimbotLabel.Text = "Off"
+aimbotLabel.Parent = aimbotButton
+
+local button2 = Instance.new("TextButton")
+button2.Size = UDim2.new(0, 100, 0, 30)
+button2.Position = UDim2.new(0.05, 0, 0.4, 0)
+button2.BackgroundColor3 = Color3.new(1, 1, 1)
+button2.Text = "Button 2"
+button2.Parent = frame
+
+local button2Label = Instance.new("TextLabel")
+button2Label.Size = UDim2.new(0, 30, 0, 30)
+button2Label.Position = UDim2.new(0.75, 0, 0.42, 0) -- Adjusted position
+button2Label.AnchorPoint = Vector2.new(1, 0) -- Anchored to the right
+button2Label.BackgroundColor3 = Color3.new(1, 1, 1)
+button2Label.Text = "Off"
+button2Label.Parent = button2
+
+local button3 = Instance.new("TextButton")
+button3.Size = UDim2.new(0, 100, 0, 30)
+button3.Position = UDim2.new(0.05, 0, 0.6, 0)
+button3.BackgroundColor3 = Color3.new(1, 1, 1)
+button3.Text = "Button 3"
+button3.Parent = frame
+
+local button3Label = Instance.new("TextLabel")
+button3Label.Size = UDim2.new(0, 30, 0, 30)
+button3Label.Position = UDim2.new(0.75, 0, 0.62, 0) -- Adjusted position
+button3Label.AnchorPoint = Vector2.new(1, 0) -- Anchored to the right
+button3Label.BackgroundColor3 = Color3.new(1, 1, 1)
+button3Label.Text = "Off"
+button3Label.Parent = button3
+
+local button_states = {false, false, false}
+
+local function toggleButton(button)
+    button_states[button] = not button_states[button]
+    if button == 1 then
+        aimbotLabel.Text = button_states[button] and "On" or "Off"
+    elseif button == 2 then
+        button2Label.Text = button_states[button] and "On" or "Off"
+    elseif button == 3 then
+        button3Label.Text = button_states[button] and "On" or "Off"
+    end
+end
+
+closeButton.MouseButton1Click:Connect(function()
+    gui:Destroy()
+end)
+
+aimbotButton.MouseButton1Click:Connect(function()
+    toggleButton(1)
+end)
+
+button2.MouseButton1Click:Connect(function()
+    toggleButton(2)
+end)
+
+button3.MouseButton1Click:Connect(function()
+    toggleButton(3)
+end)
