@@ -1,0 +1,93 @@
+-- Create the GUI
+local screenGui = Instance.new("ScreenGui")
+local frame = Instance.new("Frame")
+local usernameTextBox = Instance.new("TextBox")
+local speedTextBox = Instance.new("TextBox")
+local protectButton = Instance.new("TextButton")
+
+screenGui.Name = "ProtectGUI"
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Frame properties (black background)
+frame.Size = UDim2.new(0, 240, 0, 220)
+frame.Position = UDim2.new(1, -250, 1, -230) -- Adjusted position
+frame.AnchorPoint = Vector2.new(1, 1) -- Set anchor point to bottom right
+frame.BackgroundColor3 = Color3.new(0, 0, 0)
+frame.Parent = screenGui
+
+-- Username TextBox properties
+usernameTextBox.Size = UDim2.new(0, 220, 0, 30)
+usernameTextBox.Position = UDim2.new(0, 10, 0, 10)
+usernameTextBox.PlaceholderText = "Enter Player's Username"
+usernameTextBox.BackgroundColor3 = Color3.new(1, 1, 1)
+usernameTextBox.TextColor3 = Color3.new(0, 0, 0)
+usernameTextBox.Parent = frame
+
+-- Speed TextBox properties
+speedTextBox.Size = UDim2.new(0, 220, 0, 30)
+speedTextBox.Position = UDim2.new(0, 10, 0, 50)
+speedTextBox.PlaceholderText = "Enter Teleport Speed (default: 2)"
+speedTextBox.BackgroundColor3 = Color3.new(1, 1, 1)
+speedTextBox.TextColor3 = Color3.new(0, 0, 0)
+speedTextBox.Parent = frame
+
+-- ProtectButton properties
+protectButton.Size = UDim2.new(0, 220, 0, 50)
+protectButton.Position = UDim2.new(0, 10, 0, 90)
+protectButton.Text = "Protect Off"
+protectButton.BackgroundColor3 = Color3.new(1, 1, 1)
+protectButton.TextColor3 = Color3.new(0, 0, 0)
+protectButton.Parent = frame
+
+-- Function to toggle protection
+local function toggleProtection()
+    local username = usernameTextBox.Text
+    local targetPlayer = game.Players:FindFirstChild(username)
+    
+    if targetPlayer then
+        local playerRoot = targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if playerRoot then
+            local spinning = not spinning
+            if spinning then
+                protectButton.Text = "Protect On"
+                local speed = tonumber(speedTextBox.Text) or 2
+                while spinning and playerRoot.Parent do
+                    local targetPos = playerRoot.Position
+                    local radius = 19
+                    local angle = 0
+                    while spinning and playerRoot.Parent do
+                        local offsetX = radius * math.cos(angle)
+                        local offsetZ = radius * math.sin(angle)
+                        local newPosition = targetPos + Vector3.new(offsetX, 0, offsetZ)
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(newPosition)
+                        angle = angle + math.rad(speed)
+                        targetPos = playerRoot.Position
+                        wait(0.001)
+                    end
+                end
+            else
+                protectButton.Text = "Protect Off"
+            end
+        else
+            print("Player's character not found.")
+        end
+    else
+        print("Player not found.")
+    end
+end
+
+protectButton.MouseButton1Click:Connect(toggleProtection)
+
+-- Function to set GUI size to 0.001 when Left Shift is pressed, and revert to normal size when pressed again
+local shiftPressed = false
+game:GetService("UserInputService").InputBegan:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.LeftShift then
+        shiftPressed = not shiftPressed
+        if shiftPressed then
+            frame.Size = UDim2.new(0, 0.001, 0, 0.001)
+        else
+            frame.Size = normalSize
+        end
+    end
+end)
+
